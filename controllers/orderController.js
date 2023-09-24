@@ -58,10 +58,12 @@ const getByCustomer = async (req, res) => {
   }
 };
 
-const getByStatus = async (req, res) => {
+const getOrderByStatus = async (req, res) => {
   try {
-    const orders = await Order.getByStatus(req.params.status);
-    res.send(orders);
+    const status = req.query.s;
+    // Get all orders by status
+    const orders = await Order.getByStatus(status);
+    res.json(orders);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -74,5 +76,5 @@ module.exports = {
   update,
   remove,
   getByCustomer,
-  getByStatus
+  getOrderByStatus
 };
