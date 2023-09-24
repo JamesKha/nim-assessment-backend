@@ -58,10 +58,21 @@ const getByCustomer = async (req, res) => {
   }
 };
 
-const getByStatus = async (req, res) => {
+const getTotalSales = async (req, res) => {
   try {
-    const orders = await Order.getByStatus(req.params.status);
-    res.send(orders);
+    const orders = await Order.getAll();
+    // Getting the entire order total
+    const totalSales = orders.reduce((total, order) => {
+      // Getting each total from each order
+      const eachOrderTotal = order.items.reduce((orderTotal, item) => {
+        // Getting each total from each item
+        const itemTotal = item.quantity * item.item.price;
+        return orderTotal + itemTotal;
+      }, 0);
+      return total + eachOrderTotal;
+    }, 0);
+
+    res.send({ totalSales });
   } catch (error) {
     res.status(500).send(error);
   }
@@ -74,5 +85,5 @@ module.exports = {
   update,
   remove,
   getByCustomer,
-  getByStatus
+  getTotalSales
 };
