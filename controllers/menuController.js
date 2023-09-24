@@ -27,4 +27,24 @@ const create = async (req, res) => {
   }
 };
 
-module.exports = { getAll, getOne, create };
+const deleteMenuItem = async (req, res) => {
+  try {
+    const menuItemId = req.params.id;
+    //Find the items by ID 
+    const menuItem = await MenuItems.findById(menuItemId);
+
+    if (!menuItem) {
+      return res.status(404).send("Menu item not found");
+    }
+    //Removing the item from the menu 
+    await menuItem.remove();
+    res.send({ id: menuItemId });
+    return null;
+  } catch (error) {
+    //Sending the status 500 if the statements within try fail 
+    res.status(500).send(error);
+    return null;
+  }
+};
+
+module.exports = { getAll, getOne, create, deleteMenuItem };
