@@ -27,4 +27,20 @@ const create = async (req, res) => {
   }
 };
 
-module.exports = { getAll, getOne, create };
+const searchMenuItems = async (req, res) => {
+  try {
+    const query = req.query.q;
+    const regex = new RegExp(query, "i");
+    const allMenuItems = await MenuItems.getAll();
+    const menuItems = allMenuItems.filter(
+      (menuItem) =>
+        regex.test(menuItem.name) || regex.test(menuItem.description)
+    );
+
+    res.send(menuItems);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+module.exports = { getAll, getOne, create, searchMenuItems };
