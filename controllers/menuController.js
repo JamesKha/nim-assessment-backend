@@ -28,6 +28,24 @@ const create = async (req, res) => {
 };
 
 
+const searchMenuItems = async (req, res) => {
+  try {
+    const query = req.query.q;
+    const regex = new RegExp(query, "i");
+    const allMenuItems = await MenuItems.getAll();
+    const menuItems = allMenuItems.filter(
+      (menuItem) =>
+        regex.test(menuItem.name) || regex.test(menuItem.description)
+    );
+
+    res.send(menuItems);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+
+
 const deleteMenuItem = async (req, res) => {
   try {
     const menuItemId = req.params.id;
@@ -83,5 +101,5 @@ const updateMenuItem = async (req, res) => {
   return null;
 };
 
-module.exports = { getAll, getOne, create, updateMenuItem, deleteMenuItem};
+module.exports = { getAll, getOne, create, updateMenuItem, deleteMenuItem, searchMenuItems};
 
